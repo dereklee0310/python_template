@@ -11,7 +11,7 @@ class Formatter(
     pass
 
 
-def setup_logger() -> logging.Logger:
+def setup_logger(logging_level: str) -> logging.Logger:
     logging_config = {
         "version": 1,
         "disable_existing_loggers": False,
@@ -44,7 +44,7 @@ def setup_logger() -> logging.Logger:
             #     "backupCount": 0,
             # },
         },
-        "loggers": {"root": {"level": "INFO", "handlers": ["stdout"]}},
+        "loggers": {"root": {"level": logging_level, "handlers": ["stdout"]}},
         # Uncomment this if you want a rotating log file
         # "loggers": {"root": {"level": "INFO", "handlers": ["stdout", "file"]}},
     }
@@ -52,13 +52,18 @@ def setup_logger() -> logging.Logger:
     return logging.getLogger(__name__)
 
 
-logger = setup_logger()
-
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Default Parser.",
         formatter_class=Formatter,
+    )
+    parser.add_argument(
+        "-l",
+        "--log",
+        dest="logging_level",
+        default="INFO",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        help="Set the logging level, (default: %(default)s)",
     )
     parser.add_argument(
         "-a",
@@ -69,8 +74,11 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+args = parse_args()
+logger = setup_logger(args.logging_level)
+
+
 def main():
-    args = parse_args()
     print(args)
     logger.info("Hi ;)")
 
