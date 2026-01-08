@@ -29,7 +29,7 @@ def setup_logger(logging_level: str) -> logging.Logger:
         },
         "handlers": {
             "stdout": {
-                "level": "INFO",
+                "level": logging_level,
                 "formatter": "iso-8601-simple",
                 "()": "rich.logging.RichHandler",
                 "rich_tracebacks": True,
